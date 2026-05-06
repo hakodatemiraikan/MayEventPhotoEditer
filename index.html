@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>みらいフォト</title>
+
+  <link rel="stylesheet" href="style.css">
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+</head>
+
+<body>
+
+  <h1>みらいフォト</h1>
+
+  <div id="cameraArea" class="cameraWrap">
+    <video id="video" autoplay playsinline></video>
+    <img id="framePreview" src="frame.png" alt="">
+  </div>
+
+  <button id="captureBtn" type="button">撮影する</button>
+
+  <canvas id="canvas"></canvas>
+
+  <div id="resultArea">
+    <p class="message">撮影完了！QRコードを読み取って保存してください</p>
+    <img id="resultImage" alt="完成画像">
+    <div id="qrcode"></div>
+    <button id="resetBtn" type="button">もう一度撮影する</button>
+  </div>
+
+  <script src="script.js"></script>
+
+</body>
+</html>
