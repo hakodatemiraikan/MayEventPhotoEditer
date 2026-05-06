@@ -42,7 +42,7 @@ captureBtn.addEventListener("click", async () => {
   ctx.drawImage(video, 0, 0, 1080, 1920);
 
   const frame = new Image();
-  frame.src = "frame.png";
+  frame.src = "frame.png?v=2";
 
   frame.onload = async () => {
     ctx.drawImage(frame, 0, 0, 1080, 1920);
