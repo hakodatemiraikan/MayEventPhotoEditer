@@ -2,6 +2,7 @@ const SUPABASE_URL = "https://zzyaahceaktnrlirqfwe.supabase.co";
 const SUPABASE_KEY = "sb_publishable_gaVl-RciMV33k2_venKg8w_oIl8xWWZ";
 
 const BUCKET_NAME = "MayEventPhoto";
+const FRAME_IMAGE = "frame.png?v=2";
 
 const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
@@ -32,6 +33,58 @@ async function startCamera() {
   }
 }
 
+function drawVideoCover() {
+  const vw = video.videoWidth;
+  const vh = video.videoHeight;
+
+  const canvasWidth = 1080;
+  const canvasHeight = 1920;
+
+  const canvasRatio = canvasWidth / canvasHeight;
+  const videoRatio = vw / vh;
+
+  let sx, sy, sw, sh;
+
+  if (videoRatio > canvasRatio) {
+    // 横長 → 左右カット
+    sh = vh;
+    sw = vh * canvasRatio;
+    sx = (vw - sw) / 2;
+    sy = 0;
+  } else {
+    // 縦長 → 上下カット
+    sw = vw;
+    sh = vw / canvasRatio;
+    sx = 0;
+    sy = (vh - sh) / 2;
+  }
+
+  ctx.drawImage(
+    video,
+    sx, sy, sw, sh,
+    0, 0, canvasWidth, canvasHeight
+  );
+}
+
+function drawDateText() {
+  const now = new Date();
+
+  const formattedDate =
+    now.getFullYear() + "." +
+    String(now.getMonth() + 1).padStart(2, "0") + "." +
+    String(now.getDate()).padStart(2, "0") + " " +
+    String(now.getHours()).padStart(2, "0") + ":" +
+    String(now.getMinutes()).padStart(2, "0");
+
+  ctx.font = "bold 42px Arial";
+  ctx.strokeStyle = "black";
+  ctx.lineWidth = 8;
+  ctx.fillStyle = "white";
+
+  ctx.strokeText(formattedDate, 50, 1850);
+  ctx.fillText(formattedDate, 50, 1850);
+}
+
 captureBtn.addEventListener("click", async () => {
   captureBtn.disabled = true;
   captureBtn.textContent = "保存中...";
@@ -39,69 +92,15 @@ captureBtn.addEventListener("click", async () => {
   canvas.width = 1080;
   canvas.height = 1920;
 
-  const vw = video.videoWidth;
-const vh = video.videoHeight;
-
-const canvasRatio = 1080 / 1920;
-const videoRatio = vw / vh;
-
-let sx, sy, sw, sh;
-
-if (videoRatio > canvasRatio) {
-
-  // 横長 → 左右カット
-  sh = vh;
-  sw = vh * canvasRatio;
-
-  sx = (vw - sw) / 2;
-  sy = 0;
-
-} else {
-
-  // 縦長 → 上下カット
-  sw = vw;
-  sh = vw / canvasRatio;
-
-  sx = 0;
-  sy = (vh - sh) / 2;
-}
-
-ctx.drawImage(
-  video,
-  sx, sy, sw, sh,
-  0, 0, 1080, 1920
-);
+  drawVideoCover();
 
   const frame = new Image();
-  frame.src = "frame.png?v=2";
+  frame.src = FRAME_IMAGE;
 
   frame.onload = async () => {
     ctx.drawImage(frame, 0, 0, 1080, 1920);
 
-    const now = new Date();
-
-const now = new Date();
-
-const formattedDate =
-  now.getFullYear() + "." +
-  String(now.getMonth() + 1).padStart(2, "0") + "." +
-  String(now.getDate()).padStart(2, "0") + " " +
-  String(now.getHours()).padStart(2, "0") + ":" +
-  String(now.getMinutes()).padStart(2, "0");
-
-// フォント
-ctx.font = "bold 42px Arial";
-
-// 黒フチ
-ctx.strokeStyle = "black";
-ctx.lineWidth = 8;
-
-// 白文字
-ctx.fillStyle = "white";
-
-// 描画
-ctx.strokeText(formattedDate, 50, 1850);
-ctx.fillText(formattedDate, 50, 1850);
+    drawDateText();
 
     const dataUrl = canvas.toDataURL("image/png");
     resultImage.src = dataUrl;
