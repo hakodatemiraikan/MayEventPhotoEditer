@@ -39,7 +39,38 @@ captureBtn.addEventListener("click", async () => {
   canvas.width = 1080;
   canvas.height = 1920;
 
-  ctx.drawImage(video, 0, 0, 1080, 1920);
+  const vw = video.videoWidth;
+const vh = video.videoHeight;
+
+const canvasRatio = 1080 / 1920;
+const videoRatio = vw / vh;
+
+let sx, sy, sw, sh;
+
+if (videoRatio > canvasRatio) {
+
+  // 横長 → 左右カット
+  sh = vh;
+  sw = vh * canvasRatio;
+
+  sx = (vw - sw) / 2;
+  sy = 0;
+
+} else {
+
+  // 縦長 → 上下カット
+  sw = vw;
+  sh = vw / canvasRatio;
+
+  sx = 0;
+  sy = (vh - sh) / 2;
+}
+
+ctx.drawImage(
+  video,
+  sx, sy, sw, sh,
+  0, 0, 1080, 1920
+);
 
   const frame = new Image();
   frame.src = "frame.png?v=2";
