@@ -80,9 +80,28 @@ ctx.drawImage(
 
     const now = new Date();
 
-    ctx.fillStyle = "white";
-    ctx.font = "40px sans-serif";
-    ctx.fillText(now.toLocaleString("ja-JP"), 50, 1850);
+const now = new Date();
+
+const formattedDate =
+  now.getFullYear() + "." +
+  String(now.getMonth() + 1).padStart(2, "0") + "." +
+  String(now.getDate()).padStart(2, "0") + " " +
+  String(now.getHours()).padStart(2, "0") + ":" +
+  String(now.getMinutes()).padStart(2, "0");
+
+// フォント
+ctx.font = "bold 42px Arial";
+
+// 黒フチ
+ctx.strokeStyle = "black";
+ctx.lineWidth = 8;
+
+// 白文字
+ctx.fillStyle = "white";
+
+// 描画
+ctx.strokeText(formattedDate, 50, 1850);
+ctx.fillText(formattedDate, 50, 1850);
 
     const dataUrl = canvas.toDataURL("image/png");
     resultImage.src = dataUrl;
